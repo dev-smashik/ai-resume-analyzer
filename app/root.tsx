@@ -10,6 +10,9 @@ import {
 import type { Route } from "./+types/root";
 import "./app.css";
 
+import { useEffect } from "react";
+import { usePuterStore } from "~/lib/putter";
+
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
   {
@@ -24,6 +27,15 @@ export const links: Route.LinksFunction = () => [
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
+  // Access the Puter store to initialize it
+  // This ensures Puter is ready before any components use it
+  const { init } = usePuterStore();
+
+  // Initialize Puter on app load
+  useEffect(() => {
+    init();
+  }, [init]);
+
   return (
     <html lang="en">
       <head>
@@ -33,6 +45,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
+        <script src="https://js.puter.com/v2/"></script>
+
         {children}
         <ScrollRestoration />
         <Scripts />
